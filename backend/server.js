@@ -13,6 +13,7 @@ const citaRoutes = requiere("./routes/citaRoutes.js");
 const estadoCitasRoutes = requiere("./routes/estadoCitaRoutes.js");
 const centroSaludRoutes = requiere("./routes/centroSaludRoutes.js");
 const horarioRoutes = requiere("./routes/horarioRoutes.js");
+const recetaRoutes = requiere("./routes/recetaRoutes.js");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/citas",citaRoutes);
 app.use("/estados-cita",estadoCitasRoutes);
 app.use("/centros-salud",centroSaludRoutes);
 app.use("/horarios",horarioRoutes);
+app.use("/recetas",recetaRoutes);
 
 
 
