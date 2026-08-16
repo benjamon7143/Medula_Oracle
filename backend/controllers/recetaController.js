@@ -1,124 +1,101 @@
-const recetaRepository = require("../repositories/recetaRepository");
+const recetaRepository = require('../repositories/recetaRepository');
 
-class RecetaController {
+const getRecetas = async (req, res) => {
+    try {
+        const recetas = await recetaRepository.getAllRecetas();
 
-    async obtenerTodas(req, res) {
-        try {
-            const recetas = await recetaRepository.obtenerTodas();
+        res.json(recetas);
 
-            res.json(recetas);
+    } catch (error) {
+        console.error(error);
 
-        } catch (error) {
-            console.error(error);
+        res.status(500).json({
+            message: 'Error obteniendo recetas'
+        });
+    }
+};
 
-            res.status(500).json({
-                mensaje: "Error al obtener recetas"
+const getRecetaById = async (req, res) => {
+    try {
+        const receta = await recetaRepository.getRecetaById(req.params.id);
+
+        if (!receta) {
+            return res.status(404).json({
+                message: 'Receta no encontrada'
             });
         }
+
+        res.json(receta);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Error obteniendo receta'
+        });
     }
+};
 
-    async obtenerPorId(req, res) {
-        try {
-            const { id } = req.params;
+const createReceta = async (req, res) => {
+    try {
+        const nuevaReceta = await recetaRepository.createReceta(req.body);
 
-            const receta = await recetaRepository.obtenerPorId(id);
+        res.status(201).json(nuevaReceta);
 
-            if (!receta) {
-                return res.status(404).json({
-                    mensaje: "Receta no encontrada"
-                });
-            }
+    } catch (error) {
+        console.error(error);
 
-            res.json(receta);
+        res.status(500).json({
+            message: 'Error creando receta'
+        });
+    }
+};
 
-        } catch (error) {
-            console.error(error);
+const updateReceta = async (req, res) => {
+    try {
+        const recetaActualizada = await recetaRepository.updateReceta(
+            req.params.id,
+            req.body
+        );
 
-            res.status(500).json({
-                mensaje: "Error al obtener receta"
+        if (!recetaActualizada) {
+            return res.status(404).json({
+                message: 'Receta no encontrada'
             });
         }
+
+        res.json(recetaActualizada);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'Error actualizando receta'
+        });
     }
+};
 
-    async obtenerPorConsulta(req, res) {
-        try {
-            const { consulta_id } = req.params;
+const deleteReceta = async (req, res) => {
+    try {
+        await recetaRepository.deleteReceta(req.params.id);
 
-            const recetas = await recetaRepository.obtenerPorConsulta(consulta_id);
+        res.json({
+            message: 'Receta eliminada correctamente'
+        });
 
-            res.json(recetas);
+    } catch (error) {
+        console.error(error);
 
-        } catch (error) {
-            console.error(error);
-
-            res.status(500).json({
-                mensaje: "Error al obtener recetas"
-            });
-        }
+        res.status(500).json({
+            message: 'Error eliminando receta'
+        });
     }
+};
 
-    async crear(req, res) {
-        try {
-            const nuevaReceta = await recetaRepository.crear(req.body);
-
-            res.status(201).json({
-                mensaje: "Receta creada correctamente",
-                receta: nuevaReceta
-            });
-
-        } catch (error) {
-            console.error(error);
-
-            res.status(500).json({
-                mensaje: "Error al crear receta"
-            });
-        }
-    }
-
-    async actualizar(req, res) {
-        try {
-            const { id } = req.params;
-
-            const recetaActualizada = await recetaRepository.actualizar(id, req.body);
-
-            if (!recetaActualizada) {
-                return res.status(404).json({
-                    mensaje: "Receta no encontrada"
-                });
-            }
-
-            res.json({
-                mensaje: "Receta actualizada correctamente",
-                receta: recetaActualizada
-            });
-
-        } catch (error) {
-            console.error(error);
-
-            res.status(500).json({
-                mensaje: "Error al actualizar receta"
-            });
-        }
-    }
-
-    async eliminar(req, res) {
-        try {
-            const { id } = req.params;
-
-            await recetaRepository.eliminar(id);
-
-            res.json({
-                mensaje: "Receta eliminada correctamente"
-            });
-
-        } catch (error) {
-            console.error(error);
-
-            res.status(500).json({
-                mensaje: "Error al eliminar receta"
-            });
-        }
-    }
-}
-
-module.exports = new RecetaController();
+module.exports = {
+    getRecetas,
+    getRecetaById,
+    createReceta,
+    updateReceta,
+    deleteReceta
+};

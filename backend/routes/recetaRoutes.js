@@ -1,27 +1,16 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const recetaController = require("../controllers/recetaController");
+const recetaController = require('../controllers/recetaController');
 
-const authMiddleware = require("../middlewares/authMiddleware");
-const roleMiddleware = require("../middlewares/roleMiddleware");
+router.get('/', recetaController.getRecetas);
 
-// Obtener todas
-router.get("/",authMiddleware,recetaController.obtenerTodas);
+router.get('/:id', recetaController.getRecetaById);
 
-// Obtener por ID
-router.get("/:id",authMiddleware,recetaController.obtenerPorId);
+router.post('/', recetaController.createReceta);
 
-// Obtener por consulta
-router.get("/consulta/:consulta_id",authMiddleware,recetaController.obtenerPorConsulta);
+router.put('/:id', recetaController.updateReceta);
 
-// Crear
-router.post("/",authMiddleware,roleMiddleware(1,2),recetaController.crear);
-
-// Actualizar
-router.put("/:id",authMiddleware,roleMiddleware(1,2),recetaController.actualizar);
-
-// Eliminar
-router.delete("/:id",authMiddleware,roleMiddleware(1),recetaController.eliminar);
+router.delete('/:id', recetaController.deleteReceta);
 
 module.exports = router;

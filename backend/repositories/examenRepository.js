@@ -1,68 +1,75 @@
 const sql = require('mssql');
 const db = require('../config/db');
 
-const getAllRecetas = async () => {
+const getAllExamenes = async () => {
     const pool = await db();
+
     const result = await pool.request().query(`
         SELECT 
-            r.id,
-            r.consulta_id,
-            r.descripcion,
-            r.fecha
-        FROM recetas r
-        ORDER BY r.fecha DESC
+            e.id,
+            e.consulta_id,
+            e.tipo,
+            e.resultado,
+            e.fecha
+        FROM examenes e
+        ORDER BY e.fecha DESC
     `);
 
     return result.recordset;
 };
 
-const getRecetaById = async (id) => {
+const getExamenById = async (id) => {
     const pool = await db();
 
     const result = await pool.request()
         .input('id', sql.Int, id)
         .query(`
             SELECT *
-            FROM recetas
+            FROM examenes
             WHERE id = @id
         `);
 
     return result.recordset[0];
 };
 
-const createReceta = async (receta) => {
+const createExamen = async (examen) => {
     const pool = await db();
 
     const result = await pool.request()
-        .input('consulta_id', sql.Int, receta.consulta_id)
-        .input('descripcion', sql.NVarChar(sql.MAX), receta.descripcion)
+        .input('consulta_id', sql.Int, examen.consulta_id)
+        .input('tipo', sql.NVarChar(100), examen.tipo)
+        .input('resultado', sql.NVarChar(sql.MAX), examen.resultado)
         .query(`
-            INSERT INTO recetas (
+            INSERT INTO examenes (
                 consulta_id,
-                descripcion
+                tipo,
+                resultado
             )
             OUTPUT INSERTED.*
             VALUES (
                 @consulta_id,
-                @descripcion
+                @tipo,
+                @resultado
             )
         `);
 
     return result.recordset[0];
 };
 
-const updateReceta = async (id, receta) => {
+const updateExamen = async (id, examen) => {
     const pool = await db();
 
     const result = await pool.request()
         .input('id', sql.Int, id)
-        .input('consulta_id', sql.Int, receta.consulta_id)
-        .input('descripcion', sql.NVarChar(sql.MAX), receta.descripcion)
+        .input('consulta_id', sql.Int, examen.consulta_id)
+        .input('tipo', sql.NVarChar(100), examen.tipo)
+        .input('resultado', sql.NVarChar(sql.MAX), examen.resultado)
         .query(`
-            UPDATE recetas
+            UPDATE examenes
             SET
                 consulta_id = @consulta_id,
-                descripcion = @descripcion
+                tipo = @tipo,
+                resultado = @resultado
             OUTPUT INSERTED.*
             WHERE id = @id
         `);
@@ -70,21 +77,21 @@ const updateReceta = async (id, receta) => {
     return result.recordset[0];
 };
 
-const deleteReceta = async (id) => {
+const deleteExamen = async (id) => {
     const pool = await db();
 
     await pool.request()
         .input('id', sql.Int, id)
         .query(`
-            DELETE FROM recetas
+            DELETE FROM examenes
             WHERE id = @id
         `);
 };
 
 module.exports = {
-    getAllRecetas,
-    getRecetaById,
-    createReceta,
-    updateReceta,
-    deleteReceta
+    getAllExamenes,
+    getExamenById,
+    createExamen,
+    updateExamen,
+    deleteExamen
 };

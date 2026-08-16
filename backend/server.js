@@ -6,14 +6,17 @@ const { connectDB } = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const usuarioRoutes = require("./routes/usuarioRoutes");
-const pacienteRoutes = requiere("./routes/pacienteRoutes.js");
-const medicoRoutes = requiere("./routes/medicoRoutes.js");
-const especialidadRoutes = requiere("./routes/especialidadRoutes.js");
-const citaRoutes = requiere("./routes/citaRoutes.js");
-const estadoCitasRoutes = requiere("./routes/estadoCitaRoutes.js");
-const centroSaludRoutes = requiere("./routes/centroSaludRoutes.js");
-const horarioRoutes = requiere("./routes/horarioRoutes.js");
-const recetaRoutes = requiere("./routes/recetaRoutes.js");
+const pacienteRoutes = require("./routes/pacienteRoutes.js");
+const medicoRoutes = require("./routes/medicoRoutes.js");
+const especialidadRoutes = require("./routes/especialidadRoutes.js");
+const citaRoutes = require("./routes/citaRoutes.js");
+const estadoCitasRoutes = require("./routes/estadoCitaRoutes.js");
+const centroSaludRoutes = require("./routes/centroSaludRoutes.js");
+const horarioRoutes = require("./routes/horarioRoutes.js");
+const recetaRoutes = require("./routes/recetaRoutes.js");
+const examenRoutes = require("./routes/examenRoutes");
+const rolRoutes = require("./routes/rolRoutes");
+const consultaRoutes = require("./routes/consultaRoutes");
 
 const app = express();
 
@@ -30,9 +33,9 @@ app.use("/estados-cita",estadoCitasRoutes);
 app.use("/centros-salud",centroSaludRoutes);
 app.use("/horarios",horarioRoutes);
 app.use("/recetas",recetaRoutes);
-
-
-
+app.use("/examenes",examenRoutes);
+app.use("/roles",rolRoutes);
+app.use("/consultas",consultaRoutes);
 
 connectDB();
 
